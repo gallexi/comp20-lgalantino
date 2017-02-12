@@ -1,0 +1,5 @@
+@media (min-width: 1401px){
+    width: 250px;
+    height: 187px;
+    background:url(ralphy.gif) 0 0px;
+}
