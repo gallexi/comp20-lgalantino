@@ -41,10 +41,10 @@
      
             xmlhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
-                var others = JSON.parse(this.responseText);
-                var othersKey = Object.keys(others)[0];
-                for(var i = 0; i < others[othersKey].length; i++){ //>
-                  makeOtherMarker(others[othersKey][i]);
+                var users = JSON.parse(this.responseText);
+                var usersKey = Object.keys(users)[0];
+                for(var i = 0; i < users[usersKey].length; i++){ //>
+                  makeUserMarker(users[usersKey][i]);
                 }
               }
             };
@@ -67,10 +67,10 @@
 	});
       }
 
-      function makeOtherMarker(them){
-        console.log(them);
+      function makeUserMarker(user){
+        console.log(user);
         var marker = new google.maps.Marker({
-          position: new google.maps.LatLng(them.lat, them.lng),
+          position: new google.maps.LatLng(user.lat, user.lng),
           map:map
         });
       }				     
