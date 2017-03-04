@@ -10,7 +10,7 @@
       #map {
         height: 100%;
       }
-      /* Optional: Makes the sample page fill the window. */
+      
       html, body {
         height: 100%;
         margin: 0;
@@ -18,21 +18,23 @@
       }
     </style>
   </head>
-  <body onload="getMyLocation()">
+  <body>
     <div id="map"></div>
     <script>
       var myLat = 0;
       var myLng = 0;
+      var myPosition = {lat: myLat, lng: myLng};
       var usersKey = "error"; //default, hopefully gets changed
-      usrname= "zhlDIUUC";
+      var usrname= "zhlDIUUC";
       var xmlhttp = new XMLHttpRequest();
-
-      function getMyLocation() {
+      var infoWindow;
+  
+      function buildMap() {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
             myLat = position.coords.latitude;
             myLng = position.coords.longitude;
-            var myposition = {lat: myLat, lng: myLng};
+            myPosition = new google.maps.LatLng(myLat, myLng);
        
             var myIcon = {
               url: "png/003-dog-seating.png",
@@ -40,9 +42,14 @@
             };
 
             var me = new google.maps.Marker({
-              position: myposition,
+              position: myPosition,
               map:map,
               icon: myIcon  
+            });
+
+            me.addListener('click', function() {
+              infoWindow.setContent("Username: " + usrname);
+              infoWindow.open(map, me);
             });
       
             var params = "username=zhlDIUUC&lat=" + myLat + "&lng=" + myLng;
@@ -73,7 +80,12 @@
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 42.4074843, lng: -71.118},
           zoom: 16
-	});
+        });
+
+        infoWindow = new google.maps.InfoWindow({
+          content: usrname
+        });
+        buildMap();
       }
 
       function makeUserMarker(user){
@@ -81,24 +93,36 @@
           userIconUrl = "png/black_car.png";
         else if (usersKey == "passengers")
           userIconUrl = "png/002-bone.png";
-        else
+        else{
           console.log("Error getting data from class API");
+          return;
+        }
 
         var userIcon = {
           url: userIconUrl,
           scaledSize: new google.maps.Size(50, 40)
         };
-      
-        console.log(user);
+
+        var userPosition = new google.maps.LatLng(user.lat, user.lng)
         var marker = new google.maps.Marker({
-          position: new google.maps.LatLng(user.lat, user.lng),
+          position: userPosition,
           map:map,
           icon: userIcon
         });
+
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(
+          myPosition, userPosition) * 0.000621371;
+
+        marker.addListener('click', function() {
+          infoWindow.setContent("<p>Username: " + user.username +
+          "</p><p>Distance from me: " + distance + " miles.</p>");
+          infoWindow.open(map, marker);
+        });
+
       }				     
 				   
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcBnaRWkuAPLMz7MGsfYQvY0WDqzvUD9Q&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcBnaRWkuAPLMz7MGsfYQvY0WDqzvUD9Q&libraries=geometry&callback=initMap"
     async defer></script>
   </body>
 </html>

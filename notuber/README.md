@@ -11,5 +11,6 @@ Resources used:
 * Stack Overflow help:
 ** http://stackoverflow.com/questions/983267/access-the-first-property-of-an-object
 ** http://stackoverflow.com/questions/15096461/resize-google-maps-marker-icon-image
+** http://stackoverflow.com/questions/12289214/change-content-infowindow-maps-v3
 * And of course, in-class examples.
 * Except for the car icon, which was given by course staff, all icons were made by Freepik (www.freepik.com) from www.flaticon.com
