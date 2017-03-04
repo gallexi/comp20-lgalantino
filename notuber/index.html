@@ -41,13 +41,16 @@
      
             xmlhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
-      console.log(this.responseText);
+                var others = JSON.parse(this.responseText);
+                var othersKey = Object.keys(others)[0];
+                for(var i = 0; i < others[othersKey].length; i++){ //>
+                  makeOtherMarker(others[othersKey][i]);
+                }
               }
             };
 
             xmlhttp.open("POST", url, true);
             xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      
             xmlhttp.send(params);
           });
         }
@@ -61,8 +64,17 @@
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 42.4074843, lng: -71.118},
           zoom: 16
-        });
+	});
       }
+
+      function makeOtherMarker(them){
+        console.log(them);
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(them.lat, them.lng),
+          map:map
+        });
+      }				     
+				   
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcBnaRWkuAPLMz7MGsfYQvY0WDqzvUD9Q&callback=initMap"
     async defer></script>
