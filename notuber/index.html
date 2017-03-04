@@ -23,6 +23,7 @@
     <script>
       var myLat = 0;
       var myLng = 0;
+      
       usrname= "zhlDIUUC";
       var xmlhttp = new XMLHttpRequest();
 
@@ -31,10 +32,17 @@
           navigator.geolocation.getCurrentPosition(function(position) {
             myLat = position.coords.latitude;
             myLng = position.coords.longitude;
-            var myposition = {lat: myLat, lng: myLng};
+      var myposition = {lat: myLat, lng: myLng};
+
+           
+      var myIcon = {
+        url: "png/003-dog-seating.png",
+        scaledSize: new google.maps.Size(50, 50),
+      };
             var me = new google.maps.Marker({
               position: myposition,
-              map:map
+              map:map,
+              icon: myIcon  
             });
             var params = "username=zhlDIUUC&lat=" + myLat + "&lng=" + myLng;
             var url = "https://defense-in-derpth.herokuapp.com/submit";

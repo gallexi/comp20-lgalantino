@@ -10,4 +10,6 @@ Resources used:
 ** https://developers.google.com/maps/documentation/javascript/tutorial
 * Stack Overflow help:
 ** http://stackoverflow.com/questions/983267/access-the-first-property-of-an-object
+** http://stackoverflow.com/questions/15096461/resize-google-maps-marker-icon-image
 * And of course, in-class examples.
+* Except for the car icon, which was given by course staff, all icons were made by Freepik (www.freepik.com) from www.flaticon.com
