@@ -18,17 +18,17 @@
       var infoWindow;
   
       function buildMap() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
+     
+      if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
             myLat = position.coords.latitude;
             myLng = position.coords.longitude;
             myPosition = new google.maps.LatLng(myLat, myLng);
-       
             var myIcon = {
               url: "png/003-dog-seating.png",
               scaledSize: new google.maps.Size(50, 50),
             };
-
+            
             var me = new google.maps.Marker({
               position: myPosition,
               map:map,
@@ -41,7 +41,7 @@
             });
       
             var params = "username=zhlDIUUC&lat=" + myLat + "&lng=" + myLng;
-            var url = "https://defense-in-derpth.herokuapp.com/submit";
+            var url = "http://stormy-springs-77997.herokuapp.com/submit";
      
             xmlhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
@@ -72,7 +72,7 @@
 
         infoWindow = new google.maps.InfoWindow({
           content: usrname
-        });
+      });
         buildMap();
       }
 
