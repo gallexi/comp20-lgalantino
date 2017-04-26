@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Security Report</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1> Introduction </h1>
+    <h1> Methodology </h1>
+    <h1> Abstract of Findings </h1>
+    <h1> Issues Found </h1>
+    <ol>
+	<li>XSS in username field on index page of server
+	    <ul>
+		<li>Severity:</li>
+		<li>Description:</li>
+		<li>Proof of vulnerability:</li>
+		<li>Resolution:</li>
+	    </ul>
+	</li>
+	<li>XSS in lat & lng fields on index page of server
+	    <ul>
+		<li>Severity:</li>
+		<li>Description:</li>
+		<li>Proof of vulnerability:</li>
+		<li>Resolution:</li>
+	    </ul>
+	</li>
+	<li>Database injection in vehicles query
+	    <ul>
+		<li>Severity:</li>
+		<li>Description:</li>
+		<li>Proof of vulnerability:</li>
+		<li>Resolution:</li>
+	    </ul>
+	</li>
+	<li>XSS in lat & lng fields on vehicles page of server
+	    <ul>
+		<li>Severity:</li>
+		<li>Description:</li>
+		<li>Proof of vulnerability:</li>
+		<li>Resolution:</li>
+	    </ul>
+	</li>
+    </ol>
+    <h1> Conclusion </h1>
+    <h1> References </h1>
+  </body>
+</html>

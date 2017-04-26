@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Security Report</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1> Introduction </h1>
+    <p>The product that I have been "hired" to assess is a server for a black car service. This server has 3 APIs: A GET index page, which returns a list of passengers who have requested a car in the past five minutes, a GET /vehicle.json, which takes a query of a username and returns JSON data about that user if they are a driver, and a POST /submit route that takes a username, a latitude, and a longitude, and returns the users of the opposite vehicle/passenger category who have used the POST route in the past five minutes.</p>
+    <p>I have been "hired" to assess this server for security flaws. Here I will detail three security flaws that I discovered.</p>
+    <h1> Methodology </h1>
+    <p>To investigate this server, I used curl to manually send POST requests and a FireFox web browser to access the GET routes. I first investigated possible Cross Site Scripting (XSS) vulnerabilities using the POST and GET routes together, and then I investigated a possible site of an injection attack on the GET route.</p>   
+    <h1> Abstract of Findings </h1>
+    <p> In this report I note three security flaws. The first two are Cross Site Scripting vulnerabilities, which means that a malicious user can enter their own malicious code into the database via the POST route, and the malicious code is then served back to every user who accesses that data via the GET routes. This is a particularly severe vulnerability because it allows the malicious user to do a wide range of harmful things. The third vulerability I found is a database injection vulnerability on the /vehicle.json route, which means that a malicious user can use this route to get back much more from the database than they are supposed to. While this is less severe in the case of this particular software, it does expose data that is not supposed to be readily exposed.</p>
+    <h1> Issues Found </h1>
+    <ol>
+	<li>XSS in username, lat, &amp; lng fields on index page of server
+	    <ul>
+		<li><strong>Severity:</strong> High. A malicious user who exploits this vulnerability can insert presumably any Javascript they want into the database, and that code will be run when a user accesses the index page.</li>
+		<li><strong>Description:</strong> Using a tool like curl, a malicious user can send code encased in a script tag as the username, latitutde, or longitude of a user. In my testing, I sent the code: &ltscript&gtalert();&lt/script&gt as the longitude.</li>
+		<li><strong>Proof of vulnerability:</strong> <img src="issue1.png" alt="Screenshot of vulnerability 1, showing a dialogue box open on top of a page that has a list of passengers which simply reads 'Lexi requested a vehicle at, hacked, '"><p>Screenshot of vulnerability 1, showing a dialogue box open on top of a page that has a list of passengers which simply reads 'Lexi requested a vehicle at, hacked, '</p></li>
+		<li><strong>Resolution:</strong> The solution here is to sanitize input to prevent anything from being read by the parser as code. In the username field, the backend should change all angle brackets to &amp;lt and &amp;gt, which will preserve the string when printed but not cause any tags like "&ltscript&gt" to be read as proper script tags. In the lat &amp; lng fields, the solution is to convert them to numbers before proceeding, and return an error if they cannot be parsed as numbers.</li>
+	    </ul>
+	</li>
+	<li>XSS in lat &amp; lng fields on /vehicle.json page of server
+	    <ul>
+		<li><strong>Severity:</strong> High. See above.</li>
+		<li><strong>Description:</strong> Using a tool like curl, a malicious user can send code encased in a script tag as the latitutde or longitude of a user with the username of a vehicle. In my testing, I sent the code: &ltscript&gtalert();&lt/script&gt as the longitude.</li>
+		<li><strong>Proof of vulnerability:</strong><img src="issue2.png" alt="Screenshot of vulnerability 2, again showing a dialogue box open even though the page is still loading."><p>Screenshot of vulnerability 2, again showing a dialogue box open even though the page is still loading.</p></li>
+		<li><strong>Resolution:</strong> Again, the solution here is to sanitize input. The server should parse the lat &amp; lng as numbers as its very first step, and should only store data in the database that is a number. Otherwise, it should return an error.</li>
+	    </ul>
+	</li>
+	<li>Database injection in vehicles query
+	    <ul>
+		<li><strong>Severity:</strong> Low. In this case, the fact that the user can access all vehicles is not a particularly concerning security flaw, as this data is not particularly sensitive.</li>
+		<li><strong>Description:</strong> Making a GET request with the URL "black-car-service.herokuapp.com/vehicle.json?username[$ne]=lexi" causes the server to display the JSON data of all vehicles in its database whose usernames are not "lexi". The insertion of the [$ne] after username causes this to be part of the query, and when the server passes it straight into a collection.find(), the server asks for all users whose username is NOT "lexi".</li>
+		<li><strong>Proof of vulnerability:</strong><img src="issue3.png" alt="Screenshot of vulnerability 3, which shows a url of 'black-car-service.herokuapp.com/vehicle.json?username[$ne]=lexi' and a page with the JSON for the user JANET listed on it."> <p> Screenshot of vulnerability 3, which shows a url of 'black-car-service.herokuapp.com/vehicle.json?username[$ne]=lexi' and a page with the JSON for the user JANET listed on it.</p> </li>
+		<li><strong>Resolution:</strong> In the code which queries the database with the username, the query should be: "coll.find({username: {$eq: username}})" instead of just "coll.find({"username": username})". This ensures that we are finding only users whose username is equal to the username given, and not running any query the malicious user may pass to us.</li>
+	    </ul>
+	</li>
+    </ol>
+    <h1> Conclusion </h1>
+    <p>In the future, one thing that may make this app more secure against XSS is the use of a templating engine like EmbeddedJS that sanitizes strings before printing them to the screen. The cost of this depends on the engine, as it would require the integration of an entirely new technology. However, it may be worth it in the end, as the security of the webapp would not rely on the programmer remembering to sanitize every single piece of input.</p>
+    <h1> References </h1>
+    <ul>
+	<li>https://tuftsdev.github.io/WebProgramming/notes/web_security.html</li>
+    </ul>
+  </body>
+</html>
