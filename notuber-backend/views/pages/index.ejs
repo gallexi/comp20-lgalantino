@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<title>NotUber Server</title>
+	<script type="text/javascript" src="ejs_production.js"></script>
+  </head>
+  <body>
+      <h1> Passengers: </h1>
+      <ul>
+	  <% for (var i=0; i<passengers.length; i++) { %>
+	      <li><%=passengers[i].username%> requested a vehicle at <%=passengers[i].lat%>, <%=passengers[i].lng%> on <%=passengers[i].created_at%></li>
+	  <%}%>
+      </ul>
+  </body>
+</html>
